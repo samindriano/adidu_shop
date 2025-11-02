@@ -6,9 +6,9 @@ class MyHomePage extends StatelessWidget {
   final String npm = "2406400524";
   final String kelas = "B";
   final List<ItemHomepage> items = [
-    ItemHomepage("See Football News", Icons.newspaper),
-    ItemHomepage("Add News", Icons.add),
-    ItemHomepage("Logout", Icons.logout),
+    ItemHomepage("All Products", Icons.sports_soccer, Colors.blue.shade400),
+    ItemHomepage("My Products", Icons.inventory, Colors.green.shade400),
+    ItemHomepage("Create Product", Icons.add_circle, Colors.red.shade400),
   ];
 
   @override
@@ -16,7 +16,7 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Football News',
+          'AdiduShop',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -46,7 +46,7 @@ class MyHomePage extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.only(top: 16.0),
                     child: Text(
-                      'Selamat datang di Football News',
+                      'Welcome to AdiduShop',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
@@ -106,8 +106,9 @@ class InfoCard extends StatelessWidget {
 class ItemHomepage {
  final String name;
  final IconData icon;
+ final Color color;
 
- ItemHomepage(this.name, this.icon);
+ ItemHomepage(this.name, this.icon, this.color);
 }
 
 class ItemCard extends StatelessWidget {
@@ -117,7 +118,7 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).colorScheme.secondary,
+      color: item.color,
       borderRadius: BorderRadius.circular(12),
 
       child: InkWell(
@@ -125,7 +126,7 @@ class ItemCard extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!"))
+              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}"))
             );
         },
         child: Container(
