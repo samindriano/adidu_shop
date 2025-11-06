@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:adidu_shop/screens/productlist_form.dart';
+import 'package:adidu_shop/widgets/left_drawer.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
+
+  static const routeName = '/home';
   final String nama = "Samuel Indriano";
   final String npm = "2406400524";
   final String kelas = "B";
   final List<ItemHomepage> items = [
-    ItemHomepage("All Products", Icons.sports_soccer, Colors.blue.shade400),
-    ItemHomepage("My Products", Icons.inventory, Colors.green.shade400),
-    ItemHomepage("Create Product", Icons.add_circle, Colors.red.shade400),
+    ItemHomepage("Daftar Produk", Icons.sports_soccer, Colors.blue.shade400),
+    ItemHomepage("Produk Saya", Icons.inventory, Colors.green.shade400),
+    ItemHomepage("Tambah Produk", Icons.add_circle, Colors.red.shade400),
   ];
 
   @override
@@ -24,6 +28,7 @@ class MyHomePage extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
+      drawer: const LeftDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -123,11 +128,21 @@ class ItemCard extends StatelessWidget {
 
       child: InkWell(
         onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}"))
+          if (item.name == "Tambah Produk") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProductFormPage(),
+                settings: const RouteSettings(name: ProductFormPage.routeName),
+              ),
             );
+          } else {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text("Kamu telah menekan tombol ${item.name}")),
+              );
+          }
         },
         child: Container(
           padding: const EdgeInsets.all(8),
