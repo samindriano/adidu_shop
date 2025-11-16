@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:adidu_shop/screens/productlist_form.dart';
 import 'package:adidu_shop/widgets/left_drawer.dart';
+import 'package:adidu_shop/screens/product_entry_list.dart';
+import 'package:adidu_shop/screens/login.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -10,9 +14,9 @@ class MyHomePage extends StatelessWidget {
   final String npm = "2406400524";
   final String kelas = "B";
   final List<ItemHomepage> items = [
-    ItemHomepage("Daftar Produk", Icons.sports_soccer, Colors.blue.shade400),
-    ItemHomepage("Produk Saya", Icons.inventory, Colors.green.shade400),
-    ItemHomepage("Tambah Produk", Icons.add_circle, Colors.red.shade400),
+    ItemHomepage("See Product List", Icons.list_alt_rounded, Colors.green.shade400),
+    ItemHomepage("Add Product", Icons.add_box_rounded, Colors.red.shade400),
+    ItemHomepage("Logout", Icons.logout, Colors.blue.shade400),
   ];
 
   @override
@@ -52,7 +56,7 @@ class MyHomePage extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.only(top: 16.0),
                       child: Text(
-                        'Welcome to AdiduShop',
+                        'Welcome to AdiduShop!',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18.0,
@@ -124,13 +128,14 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Material(
       color: item.color,
       borderRadius: BorderRadius.circular(12),
 
       child: InkWell(
-        onTap: () {
-          if (item.name == "Tambah Produk") {
+        onTap: () async {
+          if (item.name == "Add Product") {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -138,6 +143,33 @@ class ItemCard extends StatelessWidget {
                 settings: const RouteSettings(name: ProductFormPage.routeName),
               ),
             );
+          } else if (item.name == "See Products List") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProductEntryListPage(),
+              ),
+            );
+          } else if (item.name == "Logout") {
+            final response = await request.logout(
+              "http://localhost:8000/auth/logout/",
+            );
+            String message = response["message"];
+            if (!context.mounted) return;
+            if (response['status']) {
+              String uname = response["username"];
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("$message See you again, $uname.")),
+              );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message)),
+              );
+            }
           } else {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()

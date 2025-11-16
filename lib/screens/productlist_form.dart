@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:adidu_shop/widgets/left_drawer.dart';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:adidu_shop/screens/menu.dart';
 
 class ProductFormPage extends StatefulWidget {
     const ProductFormPage({super.key});
@@ -28,9 +32,10 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     @override
     Widget build(BuildContext context) {
+        final request = context.watch<CookieRequest>();
         return Scaffold(
             appBar: AppBar(
-                title: const Center(child: Text('Form Tambah Produk')),
+                title: const Center(child: Text('Tambah Produk')),
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Colors.white,
             ),
@@ -212,41 +217,42 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                                 Theme.of(context).colorScheme.primary,
                                             ),
                                         ),
-                                        onPressed: () {
+                                        onPressed: () async {
                                             if (_formKey.currentState!.validate()) {
-                                                final priceValue = double.parse(_price.trim());
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                        return AlertDialog(
-                                                            title: const Text('Produk berhasil disimpan!'),
-                                                            content: SingleChildScrollView(
-                                                                child: Column(
-                                                                    mainAxisSize: MainAxisSize.min,
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                        Text('Nama: ${_name.trim()}'),
-                                                                        Text('Harga: Rp ${priceValue.toStringAsFixed(0)}'),
-                                                                        Text('Kategori: $_category'),
-                                                                        Text('Thumbnail: ${_thumbnail.trim()}'),
-                                                                        Text('Unggulan: ${_isFeatured ? "Ya" : "Tidak"}'),
-                                                                        const SizedBox(height: 8),
-                                                                        Text('Deskripsi: ${_description.trim()}'),
-                                                                    ],
-                                                                ),
-                                                            ),
-                                                            actions: [
-                                                                TextButton(
-                                                                    child: const Text('OK'),
-                                                                    onPressed: () {
-                                                                        Navigator.pop(context);
-                                                                        _resetForm();
-                                                                    },
-                                                                ),
-                                                            ],
-                                                        );
-                                                    },
+                                                // Using local Django server. For Android emulator use http://10.0.2.2/
+                                                final response = await request.postJson(
+                                                  "http://localhost:8000/create-flutter/",
+                                                  jsonEncode({
+                                                    "name": _name,
+                                                    "description": _description,
+                                                    "thumbnail": _thumbnail,
+                                                    "category": _category,
+                                                    "is_featured": _isFeatured,
+                                                    "price": double.tryParse(_price) ?? 0,
+                                                  }),
                                                 );
+                                                if (!mounted) return;
+                                                if (response['status'] == 'success') {
+                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text("Product successfully saved!"),
+                                                      ),
+                                                    );
+                                                    Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => MyHomePage(),
+                                                      ),
+                                                    );
+                                                } else {
+                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          response['message'] ?? "Something went wrong, please try again.",
+                                                        ),
+                                                      ),
+                                                    );
+                                                }
                                             }
                                         },
                                         child: const Text(
