@@ -40,7 +40,7 @@ class LeftDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.home_outlined),
-            title: const Text('Halaman Utama'),
+            title: const Text('Home Page'),
             onTap: () {
               final navigator = Navigator.of(context);
               navigator.pop();
@@ -51,7 +51,7 @@ class LeftDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.post_add),
-            title: const Text('Tambah Produk'),
+            title: const Text('Add Product'),
             onTap: () {
               final navigator = Navigator.of(context);
               final currentRouteName = ModalRoute.of(context)?.settings.name;
@@ -69,12 +69,12 @@ class LeftDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.list_alt_rounded),
-            title: const Text('Daftar Produk'),
+            title: const Text('My Products'),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProductEntryListPage(),
+                  builder: (context) => const ProductEntryListPage(onlyMine: true),
                 ),
               );
             },

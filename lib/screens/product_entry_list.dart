@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 
 class ProductEntryListPage extends StatefulWidget {
-  const ProductEntryListPage({super.key});
+  final bool onlyMine;
+
+  const ProductEntryListPage({super.key, this.onlyMine = false});
 
   @override
   State<ProductEntryListPage> createState() => _ProductEntryListPageState();
@@ -15,9 +17,10 @@ class ProductEntryListPage extends StatefulWidget {
 
 class _ProductEntryListPageState extends State<ProductEntryListPage> {
   Future<List<ProductEntry>> fetchProducts(CookieRequest request) async {
-    // Use filtered JSON endpoint that returns only products
-    // associated with the currently logged-in user.
-    final response = await request.get('http://localhost:8000/json/mine/');
+    final String url = widget.onlyMine
+        ? 'http://localhost:8000/json/mine/'
+        : 'http://localhost:8000/json/';
+    final response = await request.get(url);
     var data = response;
     List<ProductEntry> listProducts = [];
     for (var d in data) {
@@ -33,7 +36,7 @@ class _ProductEntryListPageState extends State<ProductEntryListPage> {
     final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product List'),
+        title: Text(widget.onlyMine ? 'My Products' : 'Product List'),
         backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
       ),

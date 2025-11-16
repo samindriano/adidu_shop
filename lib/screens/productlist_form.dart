@@ -35,7 +35,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
         final request = context.watch<CookieRequest>();
         return Scaffold(
             appBar: AppBar(
-                title: const Center(child: Text('Tambah Produk')),
+                title: const Center(child: Text('Add Product')),
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Colors.white,
             ),

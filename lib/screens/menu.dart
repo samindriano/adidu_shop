@@ -14,7 +14,7 @@ class MyHomePage extends StatelessWidget {
   final String npm = "2406400524";
   final String kelas = "B";
   final List<ItemHomepage> items = [
-    ItemHomepage("See Product List", Icons.list_alt_rounded, Colors.green.shade400),
+    ItemHomepage("All Products", Icons.list_alt_rounded, Colors.green.shade400),
     ItemHomepage("Add Product", Icons.add_box_rounded, Colors.red.shade400),
     ItemHomepage("Logout", Icons.logout, Colors.blue.shade400),
   ];
@@ -143,11 +143,11 @@ class ItemCard extends StatelessWidget {
                 settings: const RouteSettings(name: ProductFormPage.routeName),
               ),
             );
-          } else if (item.name == "See Products List") {
+          } else if (item.name == "All Products") {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ProductEntryListPage(),
+                builder: (context) => const ProductEntryListPage(onlyMine: false),
               ),
             );
           } else if (item.name == "Logout") {
