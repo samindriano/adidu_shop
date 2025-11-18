@@ -14,9 +14,9 @@ class MyHomePage extends StatelessWidget {
   final String npm = "2406400524";
   final String kelas = "B";
   final List<ItemHomepage> items = [
-    ItemHomepage("All Products", Icons.list_alt_rounded, Colors.green.shade400),
-    ItemHomepage("Add Product", Icons.add_box_rounded, Colors.red.shade400),
-    ItemHomepage("Logout", Icons.logout, Colors.blue.shade400),
+    ItemHomepage("All Products", Icons.list_alt_rounded, Colors.blue.shade400),
+    ItemHomepage("My Products", Icons.inventory_2_rounded, Colors.green.shade400),
+    ItemHomepage("Create Product", Icons.add_box_rounded, Colors.red.shade400),
   ];
 
   @override
@@ -135,7 +135,7 @@ class ItemCard extends StatelessWidget {
 
       child: InkWell(
         onTap: () async {
-          if (item.name == "Add Product") {
+          if (item.name == "Create Product") {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -150,26 +150,13 @@ class ItemCard extends StatelessWidget {
                 builder: (context) => const ProductEntryListPage(onlyMine: false),
               ),
             );
-          } else if (item.name == "Logout") {
-            final response = await request.logout(
-              "http://localhost:8000/auth/logout/",
+          } else if (item.name == "My Products") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProductEntryListPage(onlyMine: true),
+              ),
             );
-            String message = response["message"];
-            if (!context.mounted) return;
-            if (response['status']) {
-              String uname = response["username"];
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("$message See you again, $uname.")),
-              );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(message)),
-              );
-            }
           } else {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()

@@ -133,16 +133,6 @@ class ProductDetailPage extends StatelessWidget {
                       'Owner ID: ${product.userId}',
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
-                  const SizedBox(height: 24),
-                  Center(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.arrow_back),
-                      label: const Text('Kembali ke Daftar Produk'),
-                    ),
-                  ),
                 ],
               ),
             ),
